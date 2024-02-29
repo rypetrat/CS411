@@ -17,5 +17,7 @@ You may also see any lint errors in the console.
 ## Possible API endpoints: 
 
 https://rapidapi.com/haxednet/api/chatgpt-api8 -- (3.5)
+
 https://rapidapi.com/rphrp1985/api/chatgpt-42/ -- (4.0)
+
 https://rapidapi.com/LightningDev/api/simple-chatgpt-api/ -- (4.0)

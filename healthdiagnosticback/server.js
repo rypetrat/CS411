@@ -1,16 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const bodyParser = require('body-parser'); // Add this line for parsing JSON
+
 const app = express();
 
 // Enable CORS for all requests
 app.use(cors());
+app.use(bodyParser.json()); // Use bodyParser for parsing JSON
 
 const PORT = 5000;
 
 // Define a route for the root URL
 app.get('/', (req, res) => {
-  res.send('Welcome to the Health Diagonstic Tool backend server!');
+  res.send('Welcome to the Health Diagnostic Tool backend server!');
 });
 
 // test route
@@ -19,7 +22,8 @@ app.get('/api/test', (req, res) => {
 });
 
 // openAI chatGPT4 API route
-app.get('/api/data', async (req, res) => {
+app.post('/api/data', async (req, res) => {
+  const { text } = req.body; // Get the text from the request body
   const options = {
     method: 'POST',
     url: 'https://chatgpt-42.p.rapidapi.com/conversationgpt4',
@@ -32,7 +36,7 @@ app.get('/api/data', async (req, res) => {
       messages: [
         {
           role: 'user',
-          content: 'what are the colors of the american flag?'
+          content: text // Use the user's input text
         }
       ],
       system_prompt: '',
@@ -41,17 +45,17 @@ app.get('/api/data', async (req, res) => {
       top_p: 0.9,
       max_tokens: 256,
       web_access: false
-    }};
-  
+    }
+  };
+
   try {
     const response = await axios.request(options);
     res.json(response.data);
   } catch (error) {
     if (error.code === 'ECONNABORTED') {
       res.status(500).json({ error: 'Request timed out' });
-    } 
-      else {
-        res.status(500).json({ error: 'Failed to fetch data' });
+    } else {
+      res.status(500).json({ error: 'Failed to fetch data' });
     }
   }
 });

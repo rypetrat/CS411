@@ -3,6 +3,8 @@ const cors = require('cors');
 const axios = require('axios');
 const bodyParser = require('body-parser'); // Add this line for parsing JSON
 
+require('dotenv').config();
+
 const app = express();
 
 // Enable CORS for all requests
@@ -24,12 +26,13 @@ app.get('/api/test', (req, res) => {
 // openAI chatGPT4 API route
 app.post('/api/data', async (req, res) => {
   const { text } = req.body; // Get the text from the request body
+  const API_KEY = process.env.API_KEY; // Get the API key from env file
   const options = {
     method: 'POST',
     url: 'https://chatgpt-42.p.rapidapi.com/conversationgpt4',
     headers: {
       'content-type': 'application/json',
-      'X-RapidAPI-Key': '624673b5b3mshd8d8edb53803e49p1a2ac4jsnd52e961782d0',
+      'X-RapidAPI-Key': API_KEY,
       'X-RapidAPI-Host': 'chatgpt-42.p.rapidapi.com'
     },
     data: {

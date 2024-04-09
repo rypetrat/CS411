@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import './TextInput';
+import './TextInput.css';
 
 function App() {
   const [message, setMessage] = useState('');
   const [userInput, setUserInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await fetch('http://localhost:5000/api/data');
         if (!response.ok) {
@@ -17,6 +19,8 @@ function App() {
         setMessage(data.result);
       } catch (error) {
         console.error('Error:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -25,6 +29,7 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     setUserInput(''); // Clear the search bar
     try {
       const response = await fetch('http://localhost:5000/api/data', {
@@ -41,6 +46,8 @@ function App() {
       setMessage(data.result);
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,18 +60,20 @@ function App() {
             <input
               type="input"
               className="form__field"
-              placeholder="Name"
-              name="name"
-              id="name"
-              required value={userInput}
+              placeholder="Symptoms"
+              name="symptoms"
+              id="symptoms"
+              required
+              value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
             />
-            <label htmlFor="name" className="form__label">
+            <label htmlFor="symptoms" className="form__label">
               Symptoms
             </label>
           </div>
         </form>
-        {message && <p>Response: {message}</p>}
+        {loading && <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e596a334-ec86-4a84-96df-17900077efc2/d7gwtxy-a0648d53-d900-425d-85e4-96fdeb5e7968.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwic3ViIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsImF1ZCI6WyJ1cm46c2VydmljZTpmaWxlLmRvd25sb2FkIl0sIm9iaiI6W1t7InBhdGgiOiIvZi9lNTk2YTMzNC1lYzg2LTRhODQtOTZkZi0xNzkwMDA3N2VmYzIvZDdnd3R4eS1hMDY0OGQ1My1kOTAwLTQyNWQtODVlNC05NmZkZWI1ZTc5NjguZ2lmIn1dXX0.EUXeqrmX0WznMmIeDsU2e2oViUjumxXkYxFrK3A1OOY" alt="Loading..." className="loading" />} 
+        {message && !loading && <p>Response: {message}</p>}
       </header>
     </div>
   );

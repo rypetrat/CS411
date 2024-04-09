@@ -63,3 +63,8 @@
   opacity: 1;
   right: 0;
 }
+
+.loading {
+  width: 200px; 
+  height: 200px; 
+}

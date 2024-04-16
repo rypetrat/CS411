@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 
 
 
-// Define MongoDB connection
+// Define MongoDB connection strings
 const uri = 'mongodb://localhost:27017';
 const client = new MongoClient(uri);
 
@@ -43,8 +43,41 @@ app.post('/dataCollect', async (req, res) => {
 
 
 
-// External openAI chatGPT4 API route
-app.post('/api/data', async (req, res) => {
+// External symptom checker API route
+app.post('/api/get-diagnoses', async (req, res) => {
+  const { text } = req.body; // Get the entire data string from the request body
+  const { symptom } = req.body; // Get the symptom data from the request body
+  const API_KEY1 = process.env.API_KEY1; // Get the API key from env file
+  
+  const options = {
+    method: 'POST',
+    url: 'https://symptom-checker4.p.rapidapi.com/analyze',
+    params: {
+      symptoms: symptom
+    },
+    headers: {
+      'content-type': 'application/json',
+      'X-RapidAPI-Key': API_KEY1,
+      'X-RapidAPI-Host': 'symptom-checker4.p.rapidapi.com'
+    },
+    data: {
+      symptoms: text
+    }
+  };
+
+  try {
+    const response = await axios.request(options);
+    res.json(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch data' });
+  }
+});
+
+
+
+// External chatGPT API route
+app.post('/api/get-treatment', async (req, res) => {
   const { text } = req.body; // Get the text from the request body
   const API_KEY = process.env.API_KEY; // Get the API key from env file
   const API_KEY1 = process.env.API_KEY1; // Get the other API key from env file

@@ -29,10 +29,42 @@ const client = new MongoClient(uri);
 // Route to collect the data from the JSON sent from the frontend
 app.post('/dataCollect', async (req, res) => {
   try {
+    // connect to database
     await client.connect();
     const collection = client.db('user').collection('user_data');
+    
+    // inserts input data and responses
     await collection.insertOne(req.body);
+    
     res.status(200).send({ message: 'Data inserted into MongoDB' });
+  } catch (e) {
+    console.error('Error connecting to MongoDB:', e);
+    res.status(500).send({ error: 'Error connecting to MongoDB' });
+  } finally {
+    await client.close();
+  }
+});
+
+
+
+// sends requested data to be displayed on the frontend
+app.post('/dataSend', async (req, res) => {
+  try {
+    // connect to database
+    await client.connect();
+    const collection = client.db('user').collection('user_data');
+
+    // requests for the data of interest
+    const reqData = req.body;
+    
+    // Retrieve data from MongoDB
+    const cursor = collection.find({ userID: "Ryan" });
+    const data = await cursor.toArray();
+
+    console.log(data);
+
+    // Send data back to the client
+    res.status(200).send(data);
   } catch (e) {
     console.error('Error connecting to MongoDB:', e);
     res.status(500).send({ error: 'Error connecting to MongoDB' });

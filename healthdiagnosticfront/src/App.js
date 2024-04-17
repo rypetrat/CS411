@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import './App.css';
 import './TextInput.css';
 
@@ -24,6 +24,7 @@ function App() {
   const [diagnoses, setDiagnoses] = useState('');
   const [treatment, setTreatment] = useState('');
   const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
   
   const [raceInputValue, setRaceInputValue] = useState('');
   const [showRaceInput, setShowRaceInput] = useState(true);
@@ -95,7 +96,7 @@ function App() {
     }
     let diagnosesData;
     let treatmentData;
-
+  
     // send first fetch request to backend for possible diagnoses
     const symptomReq = "I am a " + ageInputValue + " year old, " + raceInputValue + " " + sexInputValue + " of height " + heightInputValue + " and weight " + weightInputValue + ". I am feeling unwell and experiencing the following symptoms " + symptomsInputValue + ". Additionally, I currently take the following medication " + curMedsInputValue
     try {
@@ -112,14 +113,9 @@ function App() {
       // receive sympytom checker data
       diagnosesData = await responseDiagnoses.json();
       setDiagnoses(diagnosesData.potentialCauses.join(', '));
-    } catch (error) {
-      console.error('Error:', error);
-    } 
-
-
-    // send second fetch request to backend for the diagnoses based on the possible diagnoses
-    const textRequest = "Based on the following possible diagnoses from a medical professional for a patient: " + diagnoses + " with symptoms: " + symptomsInputValue + " . List some possible treatment plans to improve this patients health. VERY IMPORTANT ALWAYS START WITH 'Here are some possible treatments', AND ONLY INCLUDE RELAVENT DATA DO NOT INCLUDE ANY INTRODUCTORY OR CONCLUSION STATEMTENTS."
-    try {
+  
+      // send second fetch request to backend for the diagnoses based on the possible diagnoses
+      const textRequest = "Based on the following possible diagnoses from a medical professional for a patient: " + diagnoses + " with symptoms: " + symptomsInputValue + " . List some possible treatment plans to improve this patients health. VERY IMPORTANT ALWAYS START WITH 'Here are some possible treatments', AND ONLY INCLUDE RELAVENT DATA DO NOT INCLUDE ANY INTRODUCTORY OR CONCLUSION STATEMTENTS."
       const responseTreatment = await fetch('http://localhost:5000/api/get-treatment', {
         method: 'POST',
         headers: {
@@ -130,53 +126,56 @@ function App() {
       if (!responseTreatment.ok) {
         throw new Error('Network response was not ok');
       }
-      // recieve Treatment plan data
+      // receive Treatment plan data
       treatmentData = await responseTreatment.json();
       setTreatment(treatmentData.result);
     } catch (error) {
-        console.error('Error:', error);
-      } finally {
-        setLoading(false);
-      }
-
-      // send the input and generated data to the database
-      if (diagnosesData && treatmentData) {
-        await toDatabase();
-      }
-  };
-
-
-
-// sends a JSON of each data field to the backend to be stored in the database
-  const toDatabase = async () => {
-    const dataToSend = {
-      userID: 'PLACEHOLDER', //update placeholder with actual userID
-      age: ageInputValue,
-      race: raceInputValue,
-      sex: sexInputValue,
-      height: heightInputValue,
-      weight: weightInputValue,
-      symptoms: symptomsInputValue,
-      currentMedications: curMedsInputValue,
-      diagnoses: diagnoses,
-      treatment: treatment
-    };
-
-    try {
-      const response = await fetch('http://localhost:5000/dataCollect', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend)
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-    } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setLoading(false);
+      setDone(true);
     }
   };
+
+
+
+  // sends a JSON of each data field to the backend to be stored in the database
+  useEffect(() => {
+    const toDatabase = async () => {
+      const dataToSend = {
+        userID: 'PLACEHOLDER', //update placeholder with actual userID
+        password: 'PLACEHOLDER', //update placeholder with actual user password
+        age: ageInputValue,
+        race: raceInputValue,
+        sex: sexInputValue,
+        height: heightInputValue,
+        weight: weightInputValue,
+        symptoms: symptomsInputValue,
+        currentMedications: curMedsInputValue,
+        diagnoses: diagnoses,
+        treatment: treatment
+      };
+  
+      try {
+        const response = await fetch('http://localhost:5000/dataCollect', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dataToSend)
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  
+    if (diagnoses !== '' && treatment !== '') {
+      toDatabase();
+    }
+  }, [diagnoses, treatment, ageInputValue, raceInputValue, sexInputValue, heightInputValue, weightInputValue, symptomsInputValue, curMedsInputValue]);
 
 
 
@@ -185,7 +184,8 @@ function App() {
     <div className="App">
       <Navbar />
       <header className="App-text">
-        <h1>HDT Data input</h1>
+        {!done && <h1>HDT Data input</h1> }
+        {done && <h1>HDT Results</h1> }
         {showRaceInput && <p>Please enter your race:</p>} 
         {showSexInput && <p>Please enter your sex:</p>}
         {showAgeInput && <p>Please enter your age:</p>}
@@ -284,7 +284,7 @@ function App() {
         {loading && <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/e596a334-ec86-4a84-96df-17900077efc2/d7gwtxy-a0648d53-d900-425d-85e4-96fdeb5e7968.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwic3ViIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsImF1ZCI6WyJ1cm46c2VydmljZTpmaWxlLmRvd25sb2FkIl0sIm9iaiI6W1t7InBhdGgiOiIvZi9lNTk2YTMzNC1lYzg2LTRhODQtOTZkZi0xNzkwMDA3N2VmYzIvZDdnd3R4eS1hMDY0OGQ1My1kOTAwLTQyNWQtODVlNC05NmZkZWI1ZTc5NjguZ2lmIn1dXX0.EUXeqrmX0WznMmIeDsU2e2oViUjumxXkYxFrK3A1OOY" alt="Loading..." className="loading" />}
         {loading && <p>Generating Diagnoses and Treatment Plan...</p>}
         {diagnoses && !loading && <p>Possible Diagnoses: { diagnoses }</p>}
-        {treatment && !loading && <p>Possible Treatments: { treatment }</p>}
+        {treatment && !loading && <p>{ treatment }</p>}
       </header>
     </div>
   );

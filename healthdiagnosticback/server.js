@@ -58,10 +58,8 @@ app.post('/dataSend', async (req, res) => {
     const reqData = req.body;
     
     // Retrieve data from MongoDB
-    const cursor = collection.find({ userID: "Ryan" });
+    const cursor = collection.find( reqData );
     const data = await cursor.toArray();
-
-    console.log(data);
 
     // Send data back to the client
     res.status(200).send(data);

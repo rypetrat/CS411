@@ -152,7 +152,7 @@ function App() {
     const toDatabase = async () => {
       const now = new Date();
       const dataToSend = {
-        userID: 'Ryan', //update placeholder with actual userID
+        userID: 'PLACEHOLDER', //update placeholder with actual userID
         password: 'PLACEHOLDER', //update placeholder with actual user password
         age: ageInputValue,
         race: raceInputValue,

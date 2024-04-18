@@ -63,7 +63,7 @@ const UserCenter = () => {
       <Navbar />
       <header className="App-text">
         <h1>HDT User Center</h1>
-        <p>{searches.length > 0 ? "Welcome " + searches[0].userID : "Guest"}</p>
+        <p><strong style={{ color: 'white' }}>{searches.length > 0 ? "Welcome " + searches[0].userID : "Guest"}</strong></p>
         <div class="btn-group">
           <button class="button" onClick={handleClick1}>Go to Search</button>
           <button class="button" onClick={handleClick2}>Go to past searches</button>

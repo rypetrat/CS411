@@ -42,7 +42,7 @@ const UserCenter = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ userID: 'Ryan' }) // make this variable based on userID
+          body: JSON.stringify({ userID: 'PlACEHOLDER' }) // make this variable based on userID
         });
         if (!dbData.ok) {
           throw new Error('Network response was not ok');

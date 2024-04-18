@@ -30,7 +30,7 @@ const PastSearches = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ userID: 'Ryan' }) // make this a variable based on userID
+          body: JSON.stringify({ userID: 'PLACEHOLDER' }) // make this a variable based on userID
         });
         if (!dbData.ok) {
           throw new Error('Network response was not ok');

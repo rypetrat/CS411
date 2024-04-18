@@ -21,14 +21,18 @@ function Navbar() {
 
 
 function App() {
+  // defines all the variables that will take values of generated responses from APIs
   const [diagnoses, setDiagnoses] = useState('');
   const [treatment, setTreatment] = useState('');
+
+  // defines load based variables
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
-  
+
+  // defines all the variables that will take values of user inputs and if their text input should be shown
   const [raceInputValue, setRaceInputValue] = useState('');
   const [showRaceInput, setShowRaceInput] = useState(true);
-  
+
   const [sexInputValue, setSexInputValue] = useState('');
   const [showSexInput, setShowSexInput] = useState(false); 
 
@@ -94,10 +98,11 @@ function App() {
     if (showCurMedsInput) {
       setShowCurMedsInput(false);
     }
-    let diagnosesData;
-    let treatmentData;
-  
+    
+    
+
     // send first fetch request to backend for possible diagnoses
+    let diagnosesData;
     const symptomReq = "I am a " + ageInputValue + " year old, " + raceInputValue + " " + sexInputValue + " of height " + heightInputValue + " and weight " + weightInputValue + ". I am feeling unwell and experiencing the following symptoms " + symptomsInputValue + ". Additionally, I currently take the following medication " + curMedsInputValue
     try {
       const responseDiagnoses = await fetch('http://localhost:5000/api/get-diagnoses', {
@@ -114,7 +119,10 @@ function App() {
       diagnosesData = await responseDiagnoses.json();
       setDiagnoses(diagnosesData.potentialCauses.join(', '));
   
+
+
       // send second fetch request to backend for the diagnoses based on the possible diagnoses
+      let treatmentData;
       const textRequest = "Based on the following possible diagnoses from a medical professional for a patient: " + diagnoses + " with symptoms: " + symptomsInputValue + " . List some possible treatment plans to improve this patients health. VERY IMPORTANT ALWAYS START WITH 'Here are some possible treatments', AND ONLY INCLUDE RELAVENT DATA DO NOT INCLUDE ANY INTRODUCTORY OR CONCLUSION STATEMTENTS."
       const responseTreatment = await fetch('http://localhost:5000/api/get-treatment', {
         method: 'POST',
@@ -179,7 +187,7 @@ function App() {
 
 
 
-  // sets up the display of the page
+  // page display
   return (
     <div className="App">
       <Navbar />

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 
+
+// defines the navBar and each destinations route
 function Navbar() {
   return (
     <nav>
@@ -19,6 +21,7 @@ function Navbar() {
 
 
 const UserCenter = () => {
+  // directs routing for button presses
   const navigate = useNavigate();
   const handleClick1 = () => {
     navigate('/search');
@@ -27,18 +30,44 @@ const UserCenter = () => {
     navigate('/pastSearch');
   };
 
+
+
+  // retrieves data from database
+  const [searches, setSearches] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const dbData = await fetch('http://localhost:5000/dataSend', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userID: 'Ryan' }) // make this variable based on userID
+        });
+        if (!dbData.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const response = await dbData.json();
+        setSearches(response); 
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+    fetchData();
+  }, []); 
+
+
+  // page display
   return (
     <div className="App">
       <Navbar />
       <header className="App-text">
         <h1>HDT User Center</h1>
-        <p>Welcome user_X!</p>
+        <p>{searches.length > 0 ? "Welcome " + searches[0].userID : "Guest"}</p>
         <div class="btn-group">
           <button class="button" onClick={handleClick1}>Go to Search</button>
           <button class="button" onClick={handleClick2}>Go to past searches</button>
         </div>
-        {/* <button class="button1" onClick={handleClick1} ><span>Go to Search </span></button>
-        <button class="button1" onClick={handleClick2} ><span>Go to past searches </span></button> */}
       </header>
     </div>
   );

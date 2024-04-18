@@ -77,6 +77,8 @@ app.post('/dataSend', async (req, res) => {
 app.post('/api/get-diagnoses', async (req, res) => {
   const { text } = req.body; // Get the entire data string from the request body
   const { symptom } = req.body; // Get the symptom data from the request body
+
+  const API_KEY = process.env.API_KEY; // Get the API key from env file
   const API_KEY1 = process.env.API_KEY1; // Get the API key from env file
   
   const options = {
@@ -109,8 +111,10 @@ app.post('/api/get-diagnoses', async (req, res) => {
 // External chatGPT API route
 app.post('/api/get-treatment', async (req, res) => {
   const { text } = req.body; // Get the text from the request body
+
   const API_KEY = process.env.API_KEY; // Get the API key from env file
   const API_KEY1 = process.env.API_KEY1; // Get the other API key from env file
+  
   const options = {
     method: 'POST',
     url: 'https://chatgpt-42.p.rapidapi.com/conversationgpt4',

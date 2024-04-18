@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 
+
+// defines the navBar and each destinations route
 function Navbar() {
   return (
     <nav>
@@ -19,11 +21,13 @@ function Navbar() {
 
 
 const Login = () => {
+  // directs routing for button press
   const navigate = useNavigate();
   const handleClick = () => {
     navigate('/user');
   };
 
+  // page display
   return (
     <div className="App">
       <Navbar />

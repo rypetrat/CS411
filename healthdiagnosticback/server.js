@@ -114,7 +114,7 @@ app.post('/api/get-treatment', async (req, res) => {
 
   const API_KEY = process.env.API_KEY; // Get the API key from env file
   const API_KEY1 = process.env.API_KEY1; // Get the other API key from env file
-  
+
   const options = {
     method: 'POST',
     url: 'https://chatgpt-42.p.rapidapi.com/conversationgpt4',

@@ -51,17 +51,18 @@ const PastSearches = () => {
     <div className="App">
       <Navbar />
       <header className="App-text">
-        <h1>{searches.length > 0 ? searches[0].userID + "'s past searches" : "No past searches"}</h1>
+        <h1>{searches.length > 0 ? searches[0].userID + "'s Past Searches" : "No Past Searches"}</h1>
         {searches.map((search, index) => (
-          <div key={index} style={{ marginBottom: '20px' }}>
-            <strong>UserID:</strong> {search.userID}, 
-            <strong> Age:</strong> {search.age}, 
-            <strong> Race:</strong> {search.race}, 
-            <strong> Sex:</strong> {search.sex}, 
-            <strong> Height:</strong> {search.height}, 
-            <strong> Weight:</strong> {search.weight}, 
-            <strong> Symptoms:</strong> {search.symptoms}, 
-            <strong> Current Medications:</strong> {search.currentMedications}
+          <div key={index} style={{ marginBottom: '50px' }}> 
+            <strong style={{ color: 'white' }}>{index+1}.</strong>
+            <strong style={{ color: 'white' }}> Age:</strong> {search.age ? search.age : "N/A"}
+            <strong style={{ color: 'white' }}> Height:</strong> {search.height ? search.height : "N/A"}
+            <strong style={{ color: 'white' }}> Weight:</strong> {search.weight ? search.weight : "N/A"}
+            <strong style={{ color: 'white' }}> Symptoms:</strong> {search.symptoms ? search.symptoms : "N/A"}
+            <strong style={{ color: 'white' }}> Current Medications:</strong> {search.currentMedications ? search.currentMedications : "N/A"}
+            <strong style={{ color: 'white' }}> Diagnosis:</strong> {search.diagnoses ? search.diagnoses : "N/A"}
+            <strong style={{ color: 'white' }}> Treatment Plan:</strong> {search.treatment ? search.treatment : "N/A"}
+            <strong style={{ color: 'white' }}> Date:</strong> {search.timestamp ? search.timestamp : "N/A"}
           </div>
         ))}
       </header>

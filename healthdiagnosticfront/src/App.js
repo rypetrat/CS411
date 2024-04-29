@@ -21,6 +21,9 @@ function Navbar() {
 
 
 function App() {
+  // gets the currently signed in user name
+  const user = localStorage.getItem('profileName');
+
   // defines all the variables that will take values of generated responses from APIs
   const [diagnoses, setDiagnoses] = useState('');
   const [treatment, setTreatment] = useState('');
@@ -152,8 +155,7 @@ function App() {
     const toDatabase = async () => {
       const now = new Date();
       const dataToSend = {
-        userID: 'PLACEHOLDER', //update placeholder with actual userID
-        password: 'PLACEHOLDER', //update placeholder with actual user password
+        userID: user,
         age: ageInputValue,
         race: raceInputValue,
         sex: sexInputValue,
@@ -185,7 +187,7 @@ function App() {
     if (diagnoses !== '' && treatment !== '') {
       toDatabase();
     }
-  }, [diagnoses, treatment, ageInputValue, raceInputValue, sexInputValue, heightInputValue, weightInputValue, symptomsInputValue, curMedsInputValue]);
+  }, [user, diagnoses, treatment, ageInputValue, raceInputValue, sexInputValue, heightInputValue, weightInputValue, symptomsInputValue, curMedsInputValue]);
 
 
 
@@ -194,7 +196,7 @@ function App() {
     <div className="App">
       <Navbar />
       <header className="App-text">
-        {!done && <h1>HDT Search input</h1> }
+        {!done && <h1>HDT Search</h1> }
         {done && <h1>HDT Results</h1> }
         {showRaceInput && <p style={{ color: 'white' }}>Please enter your race:</p>} 
         {showSexInput && <p style={{ color: 'white' }}>Please enter your sex:</p>}

@@ -7,21 +7,27 @@ import Login from './Login';
 import PastSearches from './PastSearches';
 import UserCenter from './UserCenter';
 import reportWebVitals from './reportWebVitals';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import './index.css';
 
+
+
+
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/search" element={<App />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/pastSearch" element={<PastSearches />} />
-        <Route path="/user" element={<UserCenter />} />
-        <Route path="/" element={<GetStarted />} />
-      </Routes>
-    </Router>
-  </React.StrictMode>,
-  document.getElementById('root')
+  <GoogleOAuthProvider clientId='709232702822-4fdemlks8c8jopdh9fc82so8qn875e49.apps.googleusercontent.com'>
+        <React.StrictMode>
+          <Router>
+            <Routes>
+              <Route path="/search" element={<App />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/pastSearch" element={<PastSearches />} />
+              <Route path="/user" element={<UserCenter />} />
+              <Route path="/" element={<GetStarted />} />
+            </Routes>
+          </Router>
+        </React.StrictMode>,
+    </GoogleOAuthProvider>,
+    document.getElementById('root')
 );
 
 reportWebVitals();

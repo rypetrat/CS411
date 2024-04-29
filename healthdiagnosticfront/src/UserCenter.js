@@ -21,6 +21,9 @@ function Navbar() {
 
 
 const UserCenter = () => {
+  // gets the currently signed in user name
+  const user = localStorage.getItem('profileName');
+
   // directs routing for button presses
   const navigate = useNavigate();
   const handleClick1 = () => {
@@ -29,8 +32,6 @@ const UserCenter = () => {
   const handleClick2 = () => {
     navigate('/pastSearch');
   };
-
-
 
   // retrieves data from database
   const [searches, setSearches] = useState([]);
@@ -42,7 +43,7 @@ const UserCenter = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ userID: 'PlACEHOLDER' }) // make this variable based on userID
+          body: JSON.stringify({ userID: user }) // make this variable based on userID
         });
         if (!dbData.ok) {
           throw new Error('Network response was not ok');
@@ -54,7 +55,7 @@ const UserCenter = () => {
       }
     };
     fetchData();
-  }, []); 
+  }, [user]); 
 
 
   // page display
@@ -63,7 +64,7 @@ const UserCenter = () => {
       <Navbar />
       <header className="App-text">
         <h1>HDT User Center</h1>
-        <p><strong style={{ color: 'white' }}>{searches.length > 0 ? "Welcome " + searches[0].userID : "Guest"}</strong></p>
+        <p><strong style={{ color: 'white' }}>{searches.length > 0 || user !== null ? "Welcome " + user : "Welcome Guest"}</strong></p>
         <div class="btn-group">
           <button class="button" onClick={handleClick1}>Go to Search</button>
           <button class="button" onClick={handleClick2}>Go to past searches</button>

@@ -7,4 +7,4 @@ Frontend: move to healthdiagnosticfront (from / -> "cd healthdiagnosticfront"), 
 
 note: will not work as the .env file is not in the repo
 
-Overview Video Link: https://drive.google.com/file/d/1nx2dJGc3oLHH7MJFrI6-J0LPxFWZ5Eus/view?usp=sharing
+Overview Video Link:
